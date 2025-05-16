@@ -174,3 +174,4 @@ cython_debug/
 .pypirc
 tex/main.synctex.gz
 tex/main.bbl
+best_model.keras
