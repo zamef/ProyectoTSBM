@@ -30,9 +30,11 @@
             {\begin{tcolorbox}[colframe=white, colback=principaldos, arc=6pt]
 				\begin{onecolabstract}
 
-                    \noindent El queratocono es un padecimiento que afecta a la córnea, produciendo un empeoramiento en la visión de la persona. El objetivo principal de este proyecto es abordar la detección temprana y oportuna del Queratocono.
+                    \vspace{-10pt}
+
+                    El presente proyecto se realiza con el propósito de proveer una herramienta de diagnóstico preliminar para la detección del \textit{queratocono} en contextos donde el acceso a especialistas o los recursos necesarios sean escasos. Se propone de una manera que ayude a especialistas a poder realizar una detección oportuna de manera rápida y eficaz.
                     
-                    \noindent Se cuenta con un dataset de aproximadamente 3200 registros y con los cuales podemos intentar predecir si se tiene o no el padecimiento, así como su posible etapa. Todo esto con diversas técnicas de Machine Learning y ciencia de datos en general.
+                    Se desarrollo un sistema de clasificación para la detección del queratocono y sus posibles etapas, a partir de datos topográficos de la córnea. Se terminó utilizando un RandomForest como modelo clasificatorio, obteniendo una exactitud del $97.15\%$
     
                 \end{onecolabstract}
 			\end{tcolorbox}}
@@ -43,17 +45,269 @@
 	
 \section{Introducción}
 
+El queratocono es una ectasia corneal no inflamatoria que se caracteriza por el adelgazamiento de la córnea y la protrusión de la misma en forma de cono, lo que resulta en astigmatismo, miopía y deterioro de la agudeza visual. Esta condición típicamente aparece durante la pubertad y continúa progresando hasta los 30 - 40 años \cite{rabinowitz, namba, rubido}.
 
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{imagenes/Keratoconus.png}
+    \caption{Esquema de queratocono comparado a una córnea normal. \cite{keraimagen}}
+    \label{fig:Queratocono}
+\end{figure}
+
+La incidencia del queratocono en la población general se estima en aproximadamente 1 por cada 2,000 personas (50-230 por 100,000 habitantes). El queratocono afecta por igual a ambos sexos y se presenta en todos los grupos étnicos, aunque se han reportado mayores prevalencias en poblaciones asiáticas (igualmente puede haber un sesgo debido a la cantidad de estudios realizados). \cite{rabinowitz, namba}
+
+El queratocono se manifiesta dependiendo de la etapa en la que se encuentre.
+
+\begin{itemize}[itemsep=-2pt]
+    \item \textbf{Signos tempranos}: Incluyen astigmatismo irregular leve y cambios sutiles en la topografía corneal que pueden pasar desapercibidos en exámenes de la vista comúnes \cite{rabinowitz}.
+    \item \textbf{Signos avanzados}: Incluyen adelgazamiento estromal, anillo de Fleischer, estrías de Vogt y signo de Munson (el famoso cono) \cite{rabinowitz}.
+\end{itemize}
+
+\subsection{Diagnóstico}
+
+El diagnóstico temprano del queratocono es crucial, especialmente en candidatos a cirugía o en etapas tempranas, para evitar su desarrollo a etapas mas avanzadas. Algunos de los procedimientos utilizados actualmente son los siguientes.
+
+\begin{itemize}[itemsep=-2pt]
+    \item \textbf{Examen clínico}: Evaluación de agudeza visual, retinoscopia y biomicroscopía.
+    \item \textbf{Topografía corneal}: Es el método más sensible para una detección temprana, mostrando patrones como aumento localizado de la potencia corneal, asimetría infero-superior y desviación de los ejes \cite{rabinowitz}.
+    \item \textbf{Tomografía corneal}: Este estudio evalúa tanto las superficies anterior y posterior como el espesor corneal, permitiendo detectar alteraciones en la elevación y un subsecuente adelgazamiento corneal \cite{namba}.
+\end{itemize}
+
+En muchos países, incluyendo México, la detección del queratocono se ve impedida por la falta de especialistas y recursos necesarios para la enfermedad. Este proyecto busca simplificar el proceso de diagnóstico, permitiendo un acceso más amplio a estudios especializados y facilitando el trabajo de los profesionales capacitados.
 
 \section{Desarrollo}
 
+En esta sección se presenta y explica el proceso que se llevó a cabo para el desarrollo del proyecto en sus diferentes etapas.
 
+\subsection{Datos utilizados}
+
+El dataset utilizado fue obtenido de Kaggle \cite{bakir}. Se trata de un dataset compuesto de 3162 muestras recolectadas de una maquina TOMEY Casia SS-1000, un tomógrafo de coherencia óptica, utilizado para el diagnóstico de problemas en la córnea.
+
+Como ya se comentó, son alrededor de 3200 muestras, que están mas enfocados para el estudio con especialistas. No son como tal las tomografías, solo los datos recolectados.
+
+\subsection{Análisis exploratorio}
+
+Para el análisis exploratorio podemos realizar varios procesos para observar la estructura de los datos, podemos ver las distintas distribuciones de los datos o simplemente entenderlos y tener una idea de para poder realizar nuestros modelos.
+
+Contamos con 3162 filas y 448 columnas. Entre las columnas se pueden hallar algunas variables de importancia en la queratometría que incluyen parámetros biométricos, medidas de curvatura, elevación, espesor, entre otros.
+
+Se realizaron diversas gráficas para poder visualizar de mejor manera la estructura que tienen algunas columnas. En general, son unos datos bastante limpios y completos, no se contaban con valores nulos y se tiene una cierta coherencia. Realmente todos estos datos tienen alguna función, y lo ideal sería poder revisar de manera exhaustiva el manual de la máquina o tener la ayuda de un especialista para poder darle aún más sentido e interpretación a todos estos datos.
+
+\subsection{Preprocesamiento}
+
+En la etapa de preprocesamiento se realizaron diversos procesos para preparar los datos.
+
+Como ya se mencionó, no se contaban con valores nulos dentro del dataset. Después de eso, se obtuvieron dos columnas con valores tipo ``objeto'', por lo tanto se pueden descartar.
+
+Un paso importante es la eliminación de valores con una baja varianza, con la ayuda de una función de filtrado \textit{VarianceThreshold} se eliminaron variables constantes y cuasiconstantes. Además, se hicieron diversas pruebas ajustando el \texttt{threshold} y así obtener mas o menos características, revisando en todo momento el como reaccionaba el modelo predictivo final.
+
+Los datos no requieren de una normalización, ya que se utilizará un modelo que no lo necesita. En una sección siguiente se aplica un PCA (Análisis de Componentes Principales), el cual sí requiere una escalamiento estándar a las características numéricas.
+
+Después de la ``limpieza'', se codificaron las etiquetas contenidas en un segundo archivo (.csv) con un \texttt{LabelEncoder}, las cuales contienen 4 valores (del 0 al 3) e indican la etapa del queratocono presente en cada muestra.
+
+Finalmente, se divide el conjunto de datos en una sección de entrenamiento y otra de prueba con una función \texttt{train\_test\_split} en una relación 80 / 20.
+
+
+\subsection{Reducción de dimensionalidad}
+
+Se evaluaron dos métodos métodos para reducir la dimensionalidad del dataset, y comprobar su efectividad utilizando el modelo predictivo.
+
+\begin{enumerate}[itemsep=-2pt]
+    \item  \textbf{PCA}: A partir de las componentes principales, se identifican aquellas que mejor explican la varianza de los datos.
+    \item  \textbf{SelectKBest}: Con el uso de \texttt{f\_classif} se seleccionaron las características más relevantes estadísticamente con respecto a la variable o características objetivo.
+\end{enumerate}
+
+\subsection{Selección del Modelo}
+
+Para seleccionar el modelo a utilizar, se realizaron pruebas con 8 modelos distintos incluidos en la librería de Scikit-Learn. Todos los modelos se encuentran en el repositorio del proyecto. Se evaluaron con su precisión obtenida, su exactitud y una matriz de confusión para las predicciones con el conjunto de datos de prueba.
+
+\begin{itemize}[itemsep=-2pt]
+    \item \textbf{Random Forest}. Compuesto de árboles de decisión, cada árbol vota y el resultado final es la clase más votada (clasificación), tiene robustez ante ruido y alta dimensionalidad. \cite{biau}
+    \item \textbf{Logistic Regression}. Modelo lineal para clasificación binaria/multiclase, utiliza una función sigmoide para estimar probabilidades (0 a 1), pero es muy sensible a correlaciones entre características. \cite{cramer}
+    \item \textbf{k-Nearest Neighbors}. Clasifica un punto según la mayoría de clases de sus $k$ vecinos más cercanos, es costoso computacionalmente en datasets grandes. \cite{cunningham}
+    \item \textbf{Support Vector Machine}. Encuentra un hiperplano óptimo que maximiza el margen entre clases, usa kernels (ej. RBF) para separar datos no lineales; es efectivo en espacios de alta dimensión pero poco escalable. \cite{novakovic}
+    \item \textbf{Decision Tree}. Modelo que divide datos mediante reglas if-else (nodos), suele ser propenso al overfitting; es útil para visualizar decisiones. Es la base del Random Forest y el Gradient Boosting. \cite{mienye}
+    \item \textbf{Naive Bayes}. Clasificador basado en el teorema de Bayes, asumiendo independencia entre características. Es rápido y eficiente con datos de alta dimensión, pero pierde precisión si hay correlaciones fuertes. \cite{vikramkumar}
+    \item \textbf{Gradient Boosting}. Técnica que construye árboles secuencialmente, corrigiendo errores del anterior (el llamado boosting). Mayor precisión que un Random Forest pero más propenso al overfitting. \cite{friedman}
+    \item \textbf{Neural Network}. Modelo no lineal inspirado en neuronas biológicas, con capas ocultas que aprenden patrones. Requiere muchos datos y ajuste de hiperparámetros. Suele ser bastante bastante demandante computacionalmente en conjuntos de datos grandes. \cite{zhang}
+\end{itemize}
+
+El modelo final utilizado fue un \textbf{Random Forest Classifier}, por su capacidad de manejar datos de alta dimensión y su robustez ante el overfitting, además de su simplicidad y bajo tiempo de ejecución. Se busca mejorar el rendimiento todo lo posible con un ajuste de los hiperparámetros.
+
+\subsection{Ajuste de hiperparámetros}
+
+Para mejorar el modelo base, se aplicaron dos métodos para poder encontrar los hiperparámetros que mejores resultados nos proporcionaran.
+
+\begin{itemize}[itemsep=-2pt]
+    \item \textbf{GridSearch}.\\ Se trata de un método que busca la mejor combinación de parámetros entre todas las posibilidades dentro de los valores que se le indican.
+    \item \textbf{RandomizedSearch}.\\ Este método busca combinaciones de parámetros de manera aleatoria durante varias iteraciones, dándonos como resultado la mejor que se haya encontrado.
+\end{itemize}
+
+Este ajuste de hiperparámetros puede ser incluso más exhaustivo que el que se aplicó en este proyecto, pero debido a su costo computacional, es bastante lento el proceso. Ambos procesos se incluyen en el repositorio del proyecto.
 
 \section{Resultados}
 
+En esta sección se presentan los resultados obtenidos dentro de todo el proceso. Desde el análisis exploratorio hasta los resultados predictivos de los modelos utilizados.
 
+\subsection{Análisis exploratorio}
+
+Se tienen 3162 muestras, con 448 variables cada uno. Es un dataset bastante completo, con 319 columnas de valores \textit{float64}, 127 con valores \textit{int64} y 2 columnas con valores tipo \textit{object}. Es un dataset compuesto meramente de texto contenido en un archivo \texttt{.csv}, no debemos confundirlo con las imágenes de las tomografías, que muchas veces es lo único que el paciente ve de los estudios posibles.
+
+Para comenzar nuestro análisis exploratorio, podemos ver algunas variables importantes involucradas en la \textit{queratometría}. Seleccionamos algunas de estas características y realizamos una matriz de correlación. La matriz se puede ver en la figura \ref{fig:Corr} que se presenta a continuación.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\columnwidth]{imagenes/Corr.png}
+    \caption{Matriz de correlación entre algunas de variables de importancia. Se seleccionaron solo 10 variables de todo el dataset.}
+    \label{fig:Corr}
+\end{figure}
+
+A partir de la figura anterior, podemos observar una alta correlación entre las primeras 4 variables. El valor Ks (del inglés steep K) representa la curvatura más pronunciada de la córnea, mientras que Kf (flat K) corresponde al meridiano más plano. A partir de estos valores se calcula el CYL (cilindro), que representa cuantitativamente el grado de astigmatismo que tiene una persona. Por otro lado, AvgK es el valor promedio entre Ks y Kf, y proporciona una estimación general de la potencia refractiva de la córnea.
+
+La figura \ref{fig:Outlier} presentada a continuación, muestra los valores atípicos de estas primeras 4 variables (Ks, Kf, AvgK, CYL).
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\columnwidth]{imagenes/VarPrincipales.png}
+    \caption{Valores atípicos de las variables Ks, Kf, AvgK y CYL.}
+    \label{fig:Outlier}
+\end{figure}
+
+De las mismas variables importantes, podemos encontrar la distribución de los datos. La figura \ref{fig:Distribuciones} que se presenta a continuación muestra las distribuciones de Ks, Kf, AvgK, CYL, Ks.Axis y Kf.Axis.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\columnwidth]{imagenes/Distribuciones.png}
+    \caption{Distribuciones de las variables Ks, Kf, AvgK, CYL, Ks.Axis y Kf.Axis}
+    \label{fig:Distribuciones}
+\end{figure}
+
+Los datos contienen una etiqueta que nos dice el lado del ojo. Podemos realizar una separación de todos los ojos izquierdos y derechos con una función. Como resultado, tenemos en el dataset un total de 1592 ojos izquierdos y 1570 ojos derechos. 
+
+La figura \ref{fig:OjoLado} que se presenta a continuación muestra una comparación de algunas variables entre ambos ojos, para observar si se presenta un sesgo importante dependiendo del lado.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\columnwidth]{imagenes/OjoLado.png}
+    \caption{Comparación de valores atípicos en algunas variables dependiendo del lado del ojo.}
+    \label{fig:OjoLado}
+\end{figure}
+
+Notemos que no hay diferencia significativa entre los datos dependiendo del lado del ojo, por lo tanto podemos continuar sin tomarle mucha importancia.
+
+Al tratarse de una maquina de OCT Casia, en los datos encontramos dos valores con el nombre de \texttt{ESI.Antreior} y \texttt{ESI.Posterior}. Estos valores se refieren al \textbf{Ectasia Screening Index}, una herramienta utilizada para evaluar e identificar el riesgo de ectasia corneal, como ocurre en el queratocono. Mientras mayor sea el valor del ESI, mayor el riesgo de algún tipo de ectasia. A partir de estos datos, podemos ver el ESI comparado con la delgadez (Thinnest) que presente la córnea. La figura \ref{fig:ThinvsESI} que se presenta a continuación, muestra dos gráficas de dispersión entre el ESI anterior y posterior contra Thinnest. \cite{ambrosio, mazur}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\columnwidth]{imagenes/ThinnestvsESI.png}
+    \caption{Thinnest vs ESI}
+    \label{fig:ThinvsESI}
+\end{figure}
+
+El espesor central de una córnea ``normal'' es de aproximadamente 550 $nm$. A partir de la figura anterior podemos notar una tendencia hacia la parte superior izquierda, lo que nos indica que mientras la córnea tenga un espesor menor a 500 $nm$ los resultados nos arrojan un ESI mayor, es decir, un riesgo mayor de presentar problemas de ectasia corneal.
+
+\subsection{Reducción de dimensionalidad}
+
+La reducción de dimensionalidad es una técnica que consiste en transformar datos con muchas variables (dimensiones) en una representación más compacta, conservando la información más relevante. En nuestro caso particular contamos con un dataset de 450 variables, lo cual puede ser redundante, por lo tanto no se pierde nada intentándolo.
+
+Como resultado, no obtuvimos una mejoría al realizar esta reducción. Se utilizaron dos métodos.
+
+\subsubsection{\textbf{PCA}}
+
+El primer método para la reducción de la dimensionalidad es el \texttt{PCA} o Ánalisis de Componentes Principales. Se trata de una es una técnica que transforma un conjunto de variables correlacionadas en un nuevo conjunto de variables no correlacionadas las cuales llamaremos componentes principales. Estas nuevas componentes capturan la mayor variabilidad de los datos con número menor de dimenisiones.
+
+Nuestro modelo presenta un rendimiento bastante aceptable, pero sin mejoría significativa. La matriz de confusión obtenida a partir de nuestro modelo base (RandomForest) se presenta en la figura \ref{fig:MatrizPCA} a continuación.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{imagenes/MatricesDim/RandomForest PCA.png}
+    \caption{Matriz de confusión del RandomForest base haciendo uso del PCA.}
+    \label{fig:MatrizPCA}
+\end{figure}
+
+\subsubsection{\textbf{Mejores Variables}}
+
+El segundo método para la reducción de dimensionalidad se trata de una selección de las mejores variables. \texttt{SelectKBest} es un método que escoge las $k$ mejores variables según una métrica estadística (como correlación con la o las variables objetivo).
+
+Nuevamente, este método presenta un rendimiento bueno, pero sin mejoría tangible. La matriz de confusión obtenida aa paritr del RandomForest base se presenta en la figura \ref{fig:MatrizMV} a continuación.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{imagenes/MatricesDim/RandomForest MV.png}
+    \caption{Matriz de confusión del RandomForest base utilizando las mejores variables encontradas con SelectKBest.}
+    \label{fig:MatrizMV}
+\end{figure}
+
+De ambos métodos, podemos obtener las métricas de evaluacion obtenidas de los modelos utilizados. Se probaron el RandomFores base y los dos modelos con sus hiperparámetros ajustados, véase el Apéndice \ref{app:Reduccion} para encontrar todos los resultados, principalmente las matrices de confusión. 
+
+A continuación se presenta la tabla \ref{tab:Reduccion} donde se presentan la precisión y la exactitud obtenidas con ambos métodos para el RandomForest base.
+
+\begin{table}[hbt!]
+\centering
+\small
+\caption{Comparación de métodos}
+    \begin{tabularx}{0.95\columnwidth}{|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}    
+    \hline
+    \textbf{Método} & \textbf{Exactitud} & \textbf{Precisión} \\
+    \hline
+    \multicolumn{3}{|c|}{\textbf{RandomForest base}} \\
+    \hline
+    PCA             & 95.73\%       & 95.65\%       \\
+    SelectKBest     & 95.57\%       & 95.49\%       \\
+    \hline
+    \end{tabularx}
+\label{tab:Reduccion}
+\end{table}
+
+Ambos métodos no muestran una mejora, y en algunas instancias se obtienen resultados ligeramente inferiores. Aún así, es necesario probar el comportamiento de la reducción de dimensionalidad, ya que contamos con un dataset extenso en cuanto a características.
+
+\subsection{Selección del modelo}
+
+Se evaluaron 8 modelos predictivos de clasificación, todos ellos incluidos en la librería de \texttt{Scikit-learn}. Se implementaron de manera simple y rápida, solo para observar su viabilidad en el proyecto.
+
+Como ya se comentó en el desarrollo, se utilizaron los siguientes modelos: \textit{Random Forest}, \textit{Logistic Regression}, \textit{k-Nearest Neighbors}, \textit{C-Support Vector}, \textit{Decision Tree}, \textit{Naive Bayes}, \textit{Gradient Boosting} y una \textit{Neural Network}.
+
+La tabla \ref{tab:ComparacionModelos} que se muestra a continuación, contiene la eficiencia y la precisión obtenida con cada uno de los 8 modelos. Además, se presentan las matrices de confusión de cada modelo presente (véase el Ápendice \ref{app:Modelos}).
+
+\begin{table}[hbt!]
+\centering
+\small
+\caption{Comparación de modelos predictivos.}
+    \begin{tabularx}{0.9\columnwidth}{|c|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|} 
+    \hline
+    \textbf{Modelo} & \textbf{Exactitud} & \textbf{Precisión} \\
+    \hline
+    RF              & 96.21\%                  & 96.20\%                  \\
+    LR              & 93.05\%                  & 92.97\%                  \\
+    KNN             & 94.31\%                  & 94.17\%                  \\
+    SVM             & 93.84\%                  & 94.02\%                  \\
+    DT              & 91.47\%                  & 91.83\%                  \\
+    NB              & 76.46\%                  & 89.66\%                  \\
+    GD              & 94.79\%                  & 94.83\%                  \\
+    NN              & 95.42\%                  & 95.34\%                  \\
+    \hline
+    \end{tabularx}
+\label{tab:ComparacionModelos}
+\end{table}
+
+A simple vista el mejor modelo es el RandomForest, muestra la mejor exactitud y precisión de entre todos. De nuevo, esto es sin el ajuste de hiperparámetros.
 
 \section{Análisis y Discusión}
+
+\begin{itemize}
+    \item Es posible detectar queratocono con alta precisión utilizando técnicas de aprendizaje automático.
+    \item El modelo Random Forest es una opción viable y eficiente para la clasificación multicategoría.
+    \item Se necesita más información para refinar la detección de las etapas más graves.
+    \item Este tipo de herramienta puede ser integrada en entornos clínicos para asistir a especialistas.
+\end{itemize}
+
+\section{Trabajo Futuro}
+
+\begin{itemize}
+    \item Ampliar el dataset incluyendo más muestras en etapas avanzadas.
+    \item Probar modelos más complejos como redes neuronales profundas.
+    \item Integrar visualizaciones interactivas que ayuden al diagnóstico clínico.
+\end{itemize}
 
 
 
@@ -76,5 +330,109 @@
   {\item}
 
 \printbibliography[heading=bibintoc]
+
+\newpage
+
+{  
+\onecolumn
+\appendix
+\pagenumbering{alph}
+
+\section{Reducción de dimensionalidad}
+\label{app:Reduccion}
+
+En este apéndice se encuentran los resultados obtenidos de la reducción de dimensionalidad. Se muestran los 3 modelos y sus métricas de evaluación obtenidas (exactitud y precisión).
+
+\begin{figure}[htb!]
+    \centering
+    \subfloat[RandomForest]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesDim/RandomForest PCA.png}\label{fig:MatrizPCARF}}
+    \hfill
+    \subfloat[GridSearch]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesDim/GridSearch PCA.png}\label{fig:MatrizPCAGS}}
+    \hfill
+    \subfloat[RandomizedSearch]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesDim/RandomizedSearch PCA.png}\label{fig:MatrizPCARS}}
+    
+    \centering
+
+    \caption{Conjunto de matrices de confusión donde se muestran el RandomForest base así como los dos modelos con sus hiperparámetros ajustados y sus resultados con la aplicación del PCA.}
+  \label{fig:MatricesPCA}
+\end{figure}
+
+\begin{figure}[htb!]
+    \centering
+    \subfloat[RandomForest]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesDim/RandomForest MV.png}\label{fig:MatrizMVRF}}
+    \hfill
+    \subfloat[GridSearch]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesDim/GridSearch MV.png}\label{fig:MatrizMVGS}}
+    \hfill
+    \subfloat[RandomizedSearch]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesDim/RandomizedSearch MV.png}\label{fig:MatrizMVRS}}
+    
+    \centering
+
+    \caption{Conjunto de matrices de confusión donde se muestran el RandomForest base así como los dos modelos con sus hiperparámetros ajustados y sus resultados con la aplicación del SelectKBest.}
+  \label{fig:MatricesMV}
+\end{figure}
+
+A continuación se encuentran la exactitud y precisión obtenidas en cada modelo. Se muestran los resultados de ambos métodos de reducción.
+
+\begin{table}[hbt!]
+\centering
+\small
+\caption{Comparación de Métodos de Optimización}
+    \begin{tabularx}{0.6\columnwidth}{|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}    
+    \hline
+    \textbf{Método} & \textbf{Exactitud} & \textbf{Precisión} \\
+    \hline
+    \multicolumn{3}{|c|}{\textbf{RandomForest base}} \\
+    \hline
+    PCA             & 95.73\%       & 95.65\% \\
+    SelectKBest     & 95.57\%       & 95.49\% \\
+    \hline
+    \multicolumn{3}{|c|}{\textbf{GridSearch}} \\
+    \hline
+    PCA             & 94.94\%       & 95.10\% \\
+    SelectKBest     & 96.63\%       & 96.61\% \\
+    \hline
+    \multicolumn{3}{|c|}{\textbf{RandomizedSearch}} \\
+    \hline
+    PCA             & 95.26\%       & 95.14\% \\
+    SelectKBest     & 95.78\%       & 95.76\% \\
+    \bottomrule
+    \end{tabularx}
+\end{table}
+
+
+\newpage
+\section{Pruebas de diversos modelos}
+\label{app:Modelos}
+
+A continuación se presentan las matrices de confusión de los diversos modelos que se probaron. Realmente la mayoría de modelos tuvo un rendimiento aceptable, fue una implementación rápida y que puede tener una mejora significativa si se aplican los debidos procesos para ajustar sus hiperparámetros.
+
+\medskip
+
+\begin{figure}[htbp]
+    \centering
+    \subfloat[Logistic Regression]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/LogisticRegression.png}\label{fig:MatrizLR}}
+    \hfill
+    \subfloat[KNN]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/KNN.png}\label{fig:MatrizKNN}}
+    \hfill
+    \subfloat[SVC]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/SVC.png}\label{fig:MatrizSVC}}
+
+    \vspace{0.5cm}
+    
+    \subfloat[Decision Tree]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/DecisionTree.png}\label{fig:MatrizDT}}
+    \hfill
+    \subfloat[Naive Bayes]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/NaiveBayes.png}\label{fig:MatrizNB}}
+    \hfill
+    \subfloat[Gradient Boosting]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/GradientBoosting.png}\label{fig:MatrizGB}}
+    
+    \vspace{0.5cm}
+    \subfloat[Neural Network]{\includegraphics[width=0.32\textwidth]{imagenes/MatricesTest/NeuralNetwork.png}\label{fig:MatrizNN}}
+    
+    \centering
+
+    \caption{Conjunto de matrices de confusión, su uso principal es el de evaluar el rendimiento como modelo predictivo de Machine Learning en nuestro uso clasificatorio.}
+  \label{fig:MatricesTest}
+\end{figure}
+
+}
 
 \end{document}

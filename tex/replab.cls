@@ -34,7 +34,7 @@
 % Gráficos
 \RequirePackage{graphicx, pdfpages, pdflscape, pgfplots, tcolorbox, graphbox}
 \RequirePackage[outline]{contour}
-\RequirePackage[hang, labelfont=bf, labelsep=period, margin=0.3cm, skip=3pt]{caption}
+\RequirePackage[hang, labelfont=bf, labelsep=period, margin=0.3cm, skip=3pt, format=plain]{caption}
 \RequirePackage{subcaption}
 
 %[figurename=Fig.]{caption} Cambiar Figura.
@@ -168,8 +168,8 @@
     % --- Opción para dos autores ---
     
             % \begin{tabular}{c@{\hspace{3em}}c}
-            %	Medrano Flores Zahid & Santiago Gallegos Daniel \\ 
-            %	\href{mailto:zahidmedrano@ciencias.unam.mx}{\footnotesize\color{principaluno}\texttt{zahidmedrano@ciencias.unam.mx}} & \href{mailto:daniel_santiago07@ciencias.unam.mx}{\footnotesize\color{principaluno}\texttt{daniel\_santiago07@ciencias.unam.mx}} \\
+            %	 
+            %	\href{}{\footnotesize\color{principaluno}\texttt{}} & \href{}{\footnotesize\color{principaluno}\texttt{}} \\
             %	\includegraphics[width=0.2\linewidth]{fcunam} & \includegraphics[width=0.2\linewidth]{unam} \\
             % \end{tabular}
     

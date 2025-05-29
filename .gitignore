@@ -175,3 +175,11 @@ cython_debug/
 tex/main.synctex.gz
 tex/main.bbl
 best_model.keras
+tex/main.out
+tex/main.fls
+tex/main.fdb_latexmk
+tex/main.blg
+tex/main.bcf
+tex/main.bbl-SAVE-ERROR
+tex/main.aux
+tex/main.run.xml
