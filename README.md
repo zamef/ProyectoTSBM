@@ -29,17 +29,15 @@ De los 3 modelos finales utilizados se obtuvieron los siguientes resultados.
 
 | Modelo                    | Exactitud | Precisión |
 |---------------------------|-----------|-----------|
-| Random Forest             | 96.21%    | 96.20%    |
-| **RF + GridSearchCV**     | **97.16%**| **97.15%**|
-| RF + RandomizedSearchCV   | 96.84%    | 96.83 %   |
+| Random Forest             | 96.16%    | 96.10%    |
+| **RF + GridSearchCV**     | **97.47%**| **97.43%**|
+| RF + RandomizedSearchCV   | 96.99%    | 96.94 %   |
 
 <p align="middle">
-  <img src="https://github.com/user-attachments/assets/0dad26f0-78cd-48ab-b684-bf3f53f35698" width="32%" />
-  <img src="https://github.com/user-attachments/assets/ef4da125-fb78-487a-81c7-dad674e72d9e" width="32%" /> 
-  <img src="https://github.com/user-attachments/assets/48b44f06-2302-48f7-9508-078d897646f7" width="32%" />
+  <img src="https://github.com/user-attachments/assets/f3fbe900-9322-4778-ac72-d332c0f1e516" width="32%" /> 
+  <img src="https://github.com/user-attachments/assets/844877c7-efa9-43a8-a1d6-b24e030c10c7" width="32%" />
+  <img src="https://github.com/user-attachments/assets/f84a536b-1ea9-494e-bb8b-86d875e41e42" width="32%" />
 </p>
-
-
 
 ---
 Para replicar el proyecto, puedes clonar el repositorio e instalar todas las dependencias necesarias. El notebook principal se llama [ProyectoDeteccionQueratocono.ipynb](/ProyectoDeteccionQueratocono.ipynb).
