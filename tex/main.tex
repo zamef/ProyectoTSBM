@@ -30,11 +30,11 @@
             {\begin{tcolorbox}[colframe=white, colback=principaldos, arc=6pt]
 				\begin{onecolabstract}
 
-                    \vspace{-10pt}
+                    \vspace{-12pt}
 
-                    El presente proyecto se realiza con el propósito de proveer una herramienta de diagnóstico preliminar para la detección del \textit{queratocono} en contextos donde el acceso a especialistas o los recursos necesarios sean escasos. Se propone de una manera que ayude a especialistas a poder realizar una detección oportuna de manera rápida y eficaz.
+                    El presente proyecto se realiza con el propósito de proveer una herramienta de diagnóstico para la detección del \textit{queratocono}. Se propone de una manera que ayude a especialistas a poder realizar una detección oportuna. Se utilizó un RandomForest ajustado con un GridSearchCV como modelo clasificatorio para la detección y las posibles etapas del padecimiento, obteniendo una exactitud del $97.16\%$ y una precisión del $97.15\%$.
                     
-                    Se desarrollo un sistema de clasificación para la detección del queratocono y sus posibles etapas, a partir de datos topográficos de la córnea. Se terminó utilizando un RandomForest como modelo clasificatorio, obteniendo una exactitud del $97.15\%$
+                    Véanse los resultados completos en la sección \ref{sec:Resultados} y el repositorio del proyecto en: \url{https://github.com/zamef/ProyectoTSBM}.
     
                 \end{onecolabstract}
 			\end{tcolorbox}}
@@ -87,7 +87,7 @@ Como ya se comentó, son alrededor de 3200 muestras, que están mas enfocados pa
 
 \subsection{Análisis exploratorio}
 
-Para el análisis exploratorio podemos realizar varios procesos para observar la estructura de los datos, podemos ver las distintas distribuciones de los datos o simplemente entenderlos y tener una idea de para poder realizar nuestros modelos.
+Para el análisis exploratorio podemos realizar varios procesos para observar la estructura de los datos, podemos ver las distintas distribuciones de los datos o simplemente entenderlos y tener una idea para poder realizar nuestros modelos.
 
 Contamos con 3162 filas y 448 columnas. Entre las columnas se pueden hallar algunas variables de importancia en la queratometría que incluyen parámetros biométricos, medidas de curvatura, elevación, espesor, entre otros.
 
@@ -106,7 +106,6 @@ Los datos no requieren de una normalización, ya que se utilizará un modelo que
 Después de la ``limpieza'', se codificaron las etiquetas contenidas en un segundo archivo (.csv) con un \texttt{LabelEncoder}, las cuales contienen 4 valores (del 0 al 3) e indican la etapa del queratocono presente en cada muestra.
 
 Finalmente, se divide el conjunto de datos en una sección de entrenamiento y otra de prueba con una función \texttt{train\_test\_split} en una relación 80 / 20.
-
 
 \subsection{Reducción de dimensionalidad}
 
@@ -136,14 +135,14 @@ El modelo final utilizado fue un \textbf{Random Forest Classifier}, por su capac
 
 \subsection{Ajuste de hiperparámetros}
 
-Para mejorar el modelo base, se aplicaron dos métodos para poder encontrar los hiperparámetros que mejores resultados nos proporcionaran.
+Para mejorar el modelo base, se aplicaron dos métodos para poder encontrar los hiperparámetros que produzcan mejores resultados.
 
 \begin{itemize}[itemsep=-2pt]
     \item \textbf{GridSearch}.\\ Se trata de un método que busca la mejor combinación de parámetros entre todas las posibilidades dentro de los valores que se le indican.
     \item \textbf{RandomizedSearch}.\\ Este método busca combinaciones de parámetros de manera aleatoria durante varias iteraciones, dándonos como resultado la mejor que se haya encontrado.
 \end{itemize}
 
-Este ajuste de hiperparámetros puede ser incluso más exhaustivo que el que se aplicó en este proyecto, pero debido a su costo computacional, es bastante lento el proceso. Ambos procesos se incluyen en el repositorio del proyecto.
+Este ajuste de hiperparámetros puede ser incluso más exhaustivo que el que se aplicó en este proyecto, pero debido a su costo computacional, es bastante lento el proceso. Ambos métodos se incluyen en el repositorio del proyecto.
 
 \section{Resultados}
 
@@ -195,6 +194,8 @@ La figura \ref{fig:OjoLado} que se presenta a continuación muestra una comparac
 
 Notemos que no hay diferencia significativa entre los datos dependiendo del lado del ojo, por lo tanto podemos continuar sin tomarle mucha importancia.
 
+\medskip
+
 Al tratarse de una maquina de OCT Casia, en los datos encontramos dos valores con el nombre de \texttt{ESI.Antreior} y \texttt{ESI.Posterior}. Estos valores se refieren al \textbf{Ectasia Screening Index}, una herramienta utilizada para evaluar e identificar el riesgo de ectasia corneal, como ocurre en el queratocono. Mientras mayor sea el valor del ESI, mayor el riesgo de algún tipo de ectasia. A partir de estos datos, podemos ver el ESI comparado con la delgadez (Thinnest) que presente la córnea. La figura \ref{fig:ThinvsESI} que se presenta a continuación, muestra dos gráficas de dispersión entre el ESI anterior y posterior contra Thinnest. \cite{ambrosio, mazur}
 
 \begin{figure}[hbt!]
@@ -220,7 +221,7 @@ Nuestro modelo presenta un rendimiento bastante aceptable, pero sin mejoría sig
 
 \begin{figure}[hbt!]
     \centering
-    \includegraphics[width=0.75\columnwidth]{imagenes/MatricesDim/RandomForest PCA.png}
+    \includegraphics[width=0.745\columnwidth]{imagenes/MatricesDim/RandomForest PCA.png}
     \caption{Matriz de confusión del RandomForest base haciendo uso del PCA.}
     \label{fig:MatrizPCA}
 \end{figure}
@@ -233,14 +234,14 @@ Nuevamente, este método presenta un rendimiento bueno, pero sin mejoría tangib
 
 \begin{figure}[hbt!]
     \centering
-    \includegraphics[width=0.75\columnwidth]{imagenes/MatricesDim/RandomForest MV.png}
+    \includegraphics[width=0.745\columnwidth]{imagenes/MatricesDim/RandomForest MV.png}
     \caption{Matriz de confusión del RandomForest base utilizando las mejores variables encontradas con SelectKBest.}
     \label{fig:MatrizMV}
 \end{figure}
 
-De ambos métodos, podemos obtener las métricas de evaluacion obtenidas de los modelos utilizados. Se probaron el RandomFores base y los dos modelos con sus hiperparámetros ajustados, véase el Apéndice \ref{app:Reduccion} para encontrar todos los resultados, principalmente las matrices de confusión. 
+De ambos métodos, podemos obtener las métricas de evaluacion resultantes de los modelos utilizados. Se probaron el RandomForest base y los dos modelos con sus hiperparámetros ajustados, véase el Apéndice \ref{app:Reduccion} para encontrar todos los resultados, principalmente las matrices de confusión. 
 
-A continuación se presenta la tabla \ref{tab:Reduccion} donde se presentan la precisión y la exactitud obtenidas con ambos métodos para el RandomForest base.
+A continuación se presenta la tabla \ref{tab:Reduccion} donde se muestran la precisión y la exactitud obtenidas con ambos métodos para el RandomForest base.
 
 \begin{table}[hbt!]
 \centering
@@ -283,7 +284,7 @@ La tabla \ref{tab:ComparacionModelos} que se muestra a continuación, contiene l
     SVM             & 93.84\%                  & 94.02\%                  \\
     DT              & 91.47\%                  & 91.83\%                  \\
     NB              & 76.46\%                  & 89.66\%                  \\
-    GD              & 94.79\%                  & 94.83\%                  \\
+    GB              & 94.79\%                  & 94.83\%                  \\
     NN              & 95.42\%                  & 95.34\%                  \\
     \hline
     \end{tabularx}
@@ -292,24 +293,102 @@ La tabla \ref{tab:ComparacionModelos} que se muestra a continuación, contiene l
 
 A simple vista el mejor modelo es el RandomForest, muestra la mejor exactitud y precisión de entre todos. De nuevo, esto es sin el ajuste de hiperparámetros.
 
-\section{Análisis y Discusión}
+\subsubsection{Ajuste de hiperparámetros}
 
-\begin{itemize}
-    \item Es posible detectar queratocono con alta precisión utilizando técnicas de aprendizaje automático.
-    \item El modelo Random Forest es una opción viable y eficiente para la clasificación multicategoría.
-    \item Se necesita más información para refinar la detección de las etapas más graves.
-    \item Este tipo de herramienta puede ser integrada en entornos clínicos para asistir a especialistas.
-\end{itemize}
+El ajuste de hiperparámetros se realizó con dos métodos: GridSearchCV y RandomizedSearchCV. Ambos tienen sus beneficios y desventajas, el GridSearch suele ser mas completo o exhaustivo a costa de ser mas demandante en recursos computacionales, mientras que el RandomizedSearch suele ser mas eficiente para conjuntos grandes de hiperparámetros. Este ajuste se puede mejorar, pero debido al tiempo de ejecución para obtener nuestros resultados puede llegar a ser contraproducente.
 
-\section{Trabajo Futuro}
+Para consultar la implementación utilizada, véase en el repositorio el archivo \texttt{Test/Params.ipynb}.
 
-\begin{itemize}
-    \item Ampliar el dataset incluyendo más muestras en etapas avanzadas.
-    \item Probar modelos más complejos como redes neuronales profundas.
-    \item Integrar visualizaciones interactivas que ayuden al diagnóstico clínico.
-\end{itemize}
+\subsection{Resultados Finales}
+\label{sec:Resultados}
 
+Recabando todo lo realizado en este proyecto, en esta sección se presentan los resultados finales de nuestros modelos predictivos.
 
+A continuación, se presenta la tabla \ref{tab:Resultados} con la exactitud y precisión obtenida de los 3 modelos: el RandomForest base y los ajustados con el GridSearch / RandomizedSearch.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Resultados de nuestros 3 modelos.}
+    \begin{tabularx}{0.75\columnwidth}{|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}   
+    \hline
+    \textbf{Exactitud} & \textbf{Precisión}         \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{RandomForest}}     \\
+    \hline
+    96.21\%         &       96.20\%                 \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{GridSearch}}       \\
+    \hline
+    97.16\%         &       97.15\%                 \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{RandomizedSearch}} \\
+    \hline
+    96.84\%         &       96.83\%                 \\
+    \hline
+    \end{tabularx}
+\label{tab:Resultados}
+\end{table}
+
+La implementación del modelo de RandomForest base obtuvo buenos resultados, por lo que las mejoras posibles al momento de ajustar los hiperparámetros eran mínimas. Aún asi, ambos métodos de ajuste mejoraron los resultados del modelo de manera apreciable en las matrices de confusión obtenidas.
+
+A continuación se presenta la figura \ref{fig:MatricesFinales}, donde se muestran las 3 matrices de confusión resultantes de la predicción en el conjunto de datos de prueba con los modelos. Es posible notar la mejora de los modelos en las predicciones al tener menos falsos positivos y falsos negativos.
+
+\begin{figure}[htb!]
+    \centering
+
+    \vspace{2pt}
+
+    \begin{subfigure}[b]{\columnwidth}
+        \centering
+        \includegraphics[width=0.745\columnwidth]{imagenes/MatrizRF.png}
+        \caption{RandomForest}
+        \label{fig:MatrizFinalRF}
+    \end{subfigure}
+
+    \vspace{2pt}
+
+    \begin{subfigure}[b]{\columnwidth}
+        \centering
+        \includegraphics[width=0.745\columnwidth]{imagenes/MatrizGS.png}
+        \caption{RF con GridSearch}
+        \label{fig:MatrizFinalGS}
+    \end{subfigure}
+
+    \vspace{2pt}
+
+    \begin{subfigure}[b]{\columnwidth}
+        \centering
+        \includegraphics[width=0.745\columnwidth]{imagenes/MatrizRS.png}
+        \caption{RF con RandomizedSearch}
+        \label{fig:MatrizFinalRS}
+    \end{subfigure}
+
+    \vspace{2pt}
+
+    \caption{Matrices de confusión del RandomForest, RF con GridSearch y RF con RandomizedSearch.}
+    \label{fig:MatricesFinales}
+\end{figure}
+
+Todos los modelos se ejecutaron de manera correcta, rápida y eficiente. El ajuste de los hiperparámetros no representa un incremento significativo en el tiempo de ejecución.
+
+\section{Análisis}
+
+El análisis exploratorio revela correlaciones significativas entre algunas variables clave como Ks, Kf y CYL, lo que respalda su relevancia en el diagnóstico. Además, se identificó que la reducción de dimensionalidad (PCA y SelectKBest) no mejora significativamente el rendimiento del modelo, lo que sugiere que la información contenida en las 450 características originales es esencial para la clasificación.
+
+La comparación entre ojos izquierdos y derechos no mostró diferencias significativas, lo que indica que el modelo puede aplicarse indistintamente a ambos ojos. Asimismo, la relación entre el ESI y el espesor corneal (Thinnest) es consistente con hallazgos y reportes clínicos.
+
+El proyecto logró desarrollar un sistema eficiente para la detección y clasificación del queratocono utilizando técnicas de aprendizaje automático. El modelo de RandomForest, ajustado mediante el GridSearchCV, demuestra un rendimiento sobresaliente con una exactitud del 97.16\% y una precisión del 97.15\%. Estos resultados superan a otros modelos evaluados, como el de Regresión Logística, SVM y Redes Neuronales, destacando la robustez que tienen los Random Forest para manejar datos de alta dimensionalidad y su resistencia al overfitting.
+
+Como se puede observar en todas las matrices de confusión, se cuenta con pocos datos que puedan ayudar a refinar la detección del padecimiento en etapas mas avanzadas. Lo ideal sería obtener mas muestras que ayuden a mejorar estos modelos y puedan llegar a ser integrados en entornos clínicos que puedan asistir a especialistas realizando diagnósticos oportunos.
+
+\section{Conclusiones}
+
+El Random Forest ajustado es una herramienta confiable para la detección temprana y clasificación del queratocono, con métricas de rendimiento cercanas al 97\%. Este tipo de sistemas puede ser integrado en entornos con recursos limitados para asistir a especialistas, agilizando el diagnóstico y mejorando la accesibilidad a este tipo de estudios, lo cual consecuentemente pueda mejorar la calidad de vida de las personas.
+
+Para mejorar este proyecto o este tipo de sistemas en general, podemos explorar modelos mas complejos (ej. redes neuronales profundas o preentrenadas) o simplemente conseguir muchos mas datos. Existen trabajos de investigación enfocados directamente en la detección	de ectasias corneales o su susceptibilidad.
+
+Para profundizar y ampliar este proyecto, véanse estos trabajos de investigación enfocados en: una Convolutional Neural Network \cite{mirsalehi}, Unsupervised Machine Learning \cite{yousefi} y Logistic Regression (BAD-D v4) \cite{lopes}.
 
 % ----------------------------------------------------------------
 
