@@ -32,7 +32,7 @@
 
                     \vspace{-12pt}
 
-                    El presente proyecto se realiza con el propósito de proveer una herramienta de diagnóstico para la detección del \textit{queratocono}. Se propone de una manera que ayude a especialistas a poder realizar una detección oportuna. Se utilizó un RandomForest ajustado con un GridSearchCV como modelo clasificatorio para la detección y las posibles etapas del padecimiento, obteniendo una exactitud del $97.16\%$ y una precisión del $97.15\%$.
+                    El presente proyecto se realiza con el propósito de proveer una herramienta de diagnóstico para la detección del \textit{queratocono}. Se propone de una manera que ayude a especialistas a poder realizar una detección oportuna. Se utilizó un RandomForest ajustado con un GridSearchCV como modelo clasificatorio para la detección y las posibles etapas del padecimiento, obteniendo una exactitud del $97.47\%$ y una precisión del $97.43\%$.
                     
                     Véanse los resultados completos en la sección \ref{sec:Resultados} y el repositorio del proyecto en: \url{https://github.com/zamef/ProyectoTSBM}.
     
@@ -253,8 +253,8 @@ A continuación se presenta la tabla \ref{tab:Reduccion} donde se muestran la pr
     \hline
     \multicolumn{3}{|c|}{\textbf{RandomForest base}} \\
     \hline
-    PCA             & 95.73\%       & 95.65\%       \\
-    SelectKBest     & 95.57\%       & 95.49\%       \\
+    PCA             & 94.78\%       & 94.54\%       \\
+    SelectKBest     & 95.16\%       & 95.19\%       \\
     \hline
     \end{tabularx}
 \label{tab:Reduccion}
@@ -278,14 +278,14 @@ La tabla \ref{tab:ComparacionModelos} que se muestra a continuación, contiene l
     \hline
     \textbf{Modelo} & \textbf{Exactitud} & \textbf{Precisión} \\
     \hline
-    RF              & 96.21\%                  & 96.20\%                  \\
+    RF              & 96.16\%                  & 96.10\%                  \\
     LR              & 93.05\%                  & 92.97\%                  \\
-    KNN             & 94.31\%                  & 94.17\%                  \\
-    SVM             & 93.84\%                  & 94.02\%                  \\
-    DT              & 91.47\%                  & 91.83\%                  \\
-    NB              & 76.46\%                  & 89.66\%                  \\
-    GB              & 94.79\%                  & 94.83\%                  \\
-    NN              & 95.42\%                  & 95.34\%                  \\
+    KNN             & 94.68\%                  & 93.58\%                  \\
+    SVM             & 93.84\%                  & 93.86\%                  \\
+    DT              & 91.78\%                  & 92.23\%                  \\
+    NB              & 75.99\%                  & 90.01\%                  \\
+    GB              & 94.14\%                  & 94.15\%                  \\
+    NN              & 95.73\%                  & 95.67\%                  \\
     \hline
     \end{tabularx}
 \label{tab:ComparacionModelos}
@@ -316,15 +316,15 @@ A continuación, se presenta la tabla \ref{tab:Resultados} con la exactitud y pr
     \hline
     \multicolumn{2}{|c|}{\textbf{RandomForest}}     \\
     \hline
-    96.21\%         &       96.20\%                 \\
+    97.16\%         &       97.10\%                 \\
     \hline
     \multicolumn{2}{|c|}{\textbf{GridSearch}}       \\
     \hline
-    97.16\%         &       97.15\%                 \\
+    97.47\%         &       97.43\%                 \\
     \hline
     \multicolumn{2}{|c|}{\textbf{RandomizedSearch}} \\
     \hline
-    96.84\%         &       96.83\%                 \\
+    96.99\%         &       96.94\%                 \\
     \hline
     \end{tabularx}
 \label{tab:Resultados}
@@ -378,13 +378,13 @@ El análisis exploratorio revela correlaciones significativas entre algunas vari
 
 La comparación entre ojos izquierdos y derechos no mostró diferencias significativas, lo que indica que el modelo puede aplicarse indistintamente a ambos ojos. Asimismo, la relación entre el ESI y el espesor corneal (Thinnest) es consistente con hallazgos y reportes clínicos.
 
-El proyecto logró desarrollar un sistema eficiente para la detección y clasificación del queratocono utilizando técnicas de aprendizaje automático. El modelo de RandomForest, ajustado mediante el GridSearchCV, demuestra un rendimiento sobresaliente con una exactitud del 97.16\% y una precisión del 97.15\%. Estos resultados superan a otros modelos evaluados, como el de Regresión Logística, SVM y Redes Neuronales, destacando la robustez que tienen los Random Forest para manejar datos de alta dimensionalidad y su resistencia al overfitting.
+El proyecto logró desarrollar un sistema eficiente para la detección y clasificación del queratocono utilizando técnicas de aprendizaje automático. El modelo de RandomForest, ajustado mediante el GridSearchCV, demuestra un rendimiento sobresaliente con una exactitud del 97.47\% y una precisión del 97.43\%. Estos resultados superan a otros modelos evaluados, como el de Regresión Logística, SVM y Redes Neuronales, destacando la robustez que tienen los Random Forest para manejar datos de alta dimensionalidad y su resistencia al overfitting.
 
 Como se puede observar en todas las matrices de confusión, se cuenta con pocos datos que puedan ayudar a refinar la detección del padecimiento en etapas mas avanzadas. Lo ideal sería obtener mas muestras que ayuden a mejorar estos modelos y puedan llegar a ser integrados en entornos clínicos que puedan asistir a especialistas realizando diagnósticos oportunos.
 
 \section{Conclusiones}
 
-El Random Forest ajustado es una herramienta confiable para la detección temprana y clasificación del queratocono, con métricas de rendimiento cercanas al 97\%. Este tipo de sistemas puede ser integrado en entornos con recursos limitados para asistir a especialistas, agilizando el diagnóstico y mejorando la accesibilidad a este tipo de estudios, lo cual consecuentemente pueda mejorar la calidad de vida de las personas.
+El Random Forest ajustado es una herramienta confiable para la detección temprana y clasificación del queratocono, con métricas de rendimiento cercanas al 97.5\%. Este tipo de sistemas puede ser integrado en entornos con recursos limitados para asistir a especialistas, agilizando el diagnóstico y mejorando la accesibilidad a este tipo de estudios, lo cual consecuentemente pueda mejorar la calidad de vida de las personas.
 
 Para mejorar este proyecto o este tipo de sistemas en general, podemos explorar modelos mas complejos (ej. redes neuronales profundas o preentrenadas) o simplemente conseguir muchos mas datos. Existen trabajos de investigación enfocados directamente en la detección	de ectasias corneales o su susceptibilidad.
 
@@ -462,18 +462,18 @@ A continuación se encuentran la exactitud y precisión obtenidas en cada modelo
     \hline
     \multicolumn{3}{|c|}{\textbf{RandomForest base}} \\
     \hline
-    PCA             & 95.73\%       & 95.65\% \\
-    SelectKBest     & 95.57\%       & 95.49\% \\
+    PCA             & 94.78\%       & 94.54\% \\
+    SelectKBest     & 95.16\%       & 95.19\% \\
     \hline
     \multicolumn{3}{|c|}{\textbf{GridSearch}} \\
     \hline
-    PCA             & 94.94\%       & 95.10\% \\
-    SelectKBest     & 96.63\%       & 96.61\% \\
+    PCA             & 93.84\%       & 93.80\% \\
+    SelectKBest     & 96.00\%       & 96.01\% \\
     \hline
     \multicolumn{3}{|c|}{\textbf{RandomizedSearch}} \\
     \hline
-    PCA             & 95.26\%       & 95.14\% \\
-    SelectKBest     & 95.78\%       & 95.76\% \\
+    PCA             & 94.47\%       & 94.17\% \\
+    SelectKBest     & 96.00\%       & 95.96\% \\
     \bottomrule
     \end{tabularx}
 \end{table}
