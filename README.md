@@ -31,7 +31,7 @@ De los 3 modelos finales utilizados se obtuvieron los siguientes resultados.
 |---------------------------|-----------|-----------|
 | Random Forest             | 96.16%    | 96.10%    |
 | **RF + GridSearchCV**     | **97.47%**| **97.43%**|
-| RF + RandomizedSearchCV   | 96.99%    | 96.94 %   |
+| RF + RandomizedSearchCV   | 96.99%    | 96.94%   |
 
 <p align="middle">
   <img src="https://github.com/user-attachments/assets/f3fbe900-9322-4778-ac72-d332c0f1e516" width="32%" /> 
